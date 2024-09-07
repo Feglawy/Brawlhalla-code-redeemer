@@ -1,6 +1,6 @@
 import pyautogui
 import time
-from Types import Point
+from Brawlhalla.CodeRedeemer.Types import Point
 from pynput.keyboard import Controller as KeyboardController, Key, KeyCode
 
 class Controller:
