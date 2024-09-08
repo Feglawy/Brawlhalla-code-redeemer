@@ -21,7 +21,7 @@ class OCR:
         # Use pytesseract to extract text from the image
         return pytesseract.image_to_string(image)
 
-    def __compare_text(extracted_text:str, reference_text:str) -> bool:
+    def __compare_text(self, extracted_text:str, reference_text:str) -> bool:
         return extracted_text.strip().lower() == reference_text.strip().lower()
 
     def get_region_text(self, region:Region=None) -> str:

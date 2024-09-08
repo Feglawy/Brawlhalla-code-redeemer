@@ -3,19 +3,20 @@ from Brawlhalla.CodeRedeemer.OCR import OCR
 from Brawlhalla.Config import config as conf
 from Brawlhalla.CodeRedeemer.Logger import logger
 from Brawlhalla.CodeRedeemer.Redeemer import CodeRedeemer
-
+from Brawlhalla.CodeRedeemer.Controller import Controller
 def main():
 
-    wait = 5
-    for i in range(wait):
-        print(wait - i)
-        time.sleep(1)
 
-    CR = CodeRedeemer()
+    redeemer = CodeRedeemer()
+    
+    con = Controller()
+    con.wait_for_key('backspace')
+
     codes:list[str] = [
-        # "6____W-BD_1ZA"
+        # "code-here"
     ]
-    CR.redeem_codes(codes)
+    redeemer.redeem_codes(codes)
+
 
 
 

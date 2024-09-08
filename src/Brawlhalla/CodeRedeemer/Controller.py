@@ -1,5 +1,6 @@
 import pyautogui
 import time
+import keyboard
 from Brawlhalla.CodeRedeemer.Types import Point
 from pynput.keyboard import Controller as KeyboardController, Key, KeyCode
 
@@ -40,6 +41,15 @@ class Controller:
         self.__key_up('a')
         time.sleep(0.05)
 
+    def wait_for_key(self, key):
+        print(f"waiting for the '{key}' key to proceed with the script...")
+        try:
+            keyboard.wait(key)
+        except KeyboardInterrupt as e:
+            print("script stopped Quiting...")
+            exit()
+
+        print(f"key pressed.")
 
     def type_text(self, text, interval=0):
         """Types text using pyautogui with an optional interval."""
