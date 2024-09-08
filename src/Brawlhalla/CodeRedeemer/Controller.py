@@ -51,6 +51,17 @@ class Controller:
 
         print(f"key pressed.")
 
+    def on_press(self, key, abort_key='esc'):
+        try:
+            recorded_key = key.char
+        except:
+            recorded_key = key.name
+
+        if recorded_key == abort_key:
+            return False
+            
+
     def type_text(self, text, interval=0):
         """Types text using pyautogui with an optional interval."""
         pyautogui.typewrite(text, interval)
+    

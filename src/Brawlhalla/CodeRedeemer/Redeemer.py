@@ -64,5 +64,7 @@ class CodeRedeemer:
         try:
             for i in range(len(codes)):
                 self.redeem_code(codes[i])
+            logger.info(f"Finished redeeming {len(codes)} - press 'esc' to exit.")
+
         except Exception as e: 
             logger.error(f"an error has occured {e}")
