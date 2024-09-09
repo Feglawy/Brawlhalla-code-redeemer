@@ -17,7 +17,6 @@ class CodeRedeemer:
             region_text:str = self.ocr.get_region_text(conf.VALIDATING_CODE_REGION)
             if region_text.lower().strip() != VALIDATING_CODE_TEXT:
                 break
-            time.sleep(0.5)
 
     def is_There_an_error_with_code(self):
         ERROR_HAS_OCCURED_TEXT = "an error has occurred"
@@ -34,7 +33,6 @@ class CodeRedeemer:
         return self.ocr.get_region_text(conf.REDEEMED_CODE_TYPE).strip()
 
     def redeem_code(self, code:str):
-        logger.info(f"redeeming code:{code}")
 
         self.con.press_enter()
         self.con.select_all_hotkey()
@@ -44,25 +42,26 @@ class CodeRedeemer:
         
         time.sleep(0.2)
         self.wait_for_validation()
-        time.sleep(0.3)
+        time.sleep(0.5)
 
-        if self.is_There_an_error_with_code():
+        is_there_error = self.is_There_an_error_with_code()
+        if is_there_error:
             error_message = self.get_error_message()
             logger.info(f"{code} - couldn't be redeemed: {error_message}")
-            
+
             if error_message == "Code already redeemed":
                 file.write_code(conf.OWNED_CODES_FILE_PATH, code + '\n')
-        
         else:
             redeemed_code_type = self.get_redeemed_code_type()
             logger.info(f"{code} is a :{redeemed_code_type}.")
             time.sleep(1)
-        
+
         self.con.press_enter()
 
     def redeem_codes(self, codes:list[str]):
         try:
             for i in range(len(codes)):
+                logger.info(f"redeeming code:{codes[i]} - index: {i}")
                 self.redeem_code(codes[i])
             logger.info(f"Finished redeeming {len(codes)} - press 'esc' to exit.")
 
