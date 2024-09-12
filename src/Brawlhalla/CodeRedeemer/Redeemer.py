@@ -16,21 +16,46 @@ class CodeRedeemer:
         while True:
             region_text:str = self.ocr.get_region_text(conf.VALIDATING_CODE_REGION)
             if region_text.lower().strip() != VALIDATING_CODE_TEXT:
-                break
+                time.sleep(1)
+                return # validation ended
+            time.sleep(0.5)
 
     def is_There_an_error_with_code(self):
-        ERROR_HAS_OCCURED_TEXT = "an error has occurred"
-        return self.ocr.compare_text_with_region(conf.ERROR_HAS_OCCURRED_REGION, ERROR_HAS_OCCURED_TEXT)
+        CLOSE_BUTTON_TEXT = "close"
+        return self.ocr.compare_text_with_region(conf.CLOSE_BUTTON_REGION, CLOSE_BUTTON_TEXT)
     
-    def get_error_message(self) -> str:
-        return self.ocr.get_region_text(conf.ERROR_MESSAGE_REGION).strip()
-
     def is_code_redeemed(self) -> bool:
         DONE = "done"
         return self.ocr.compare_text_with_region(conf.DONE_BUTTON_REGION, DONE)
 
+    def get_error_message(self) -> str:
+        errorMessage = self.ocr.get_region_text(conf.ERROR_MESSAGE_REGION).strip()
+        return errorMessage
+
     def get_redeemed_code_type(self) -> str:
         return self.ocr.get_region_text(conf.REDEEMED_CODE_TYPE).strip()
+
+    def check_code_status(self, code, retries=5):
+        is_code_redeemed = self.is_code_redeemed()
+        is_there_error = self.is_There_an_error_with_code()
+        
+        if retries <= 0:
+            logger.error(f"{code} - couldn't check code")
+            return
+
+        if is_there_error:
+            error_message = self.get_error_message()
+            logger.info(f"{code} - couldn't be redeemed: {error_message}")
+
+            if error_message == "Code already redeemed":
+                file.write_code(conf.OWNED_CODES_FILE_PATH, code + '\n')
+        elif is_code_redeemed:
+            redeemed_code_type = self.get_redeemed_code_type()
+            logger.info(f"{code} is a :{redeemed_code_type}.")
+            time.sleep(1)
+        else:
+            time.sleep(0.5)
+            self.check_code_status(code, retries-1)
 
     def redeem_code(self, code:str):
 
@@ -40,21 +65,10 @@ class CodeRedeemer:
         self.con.type_text(code)
         self.con.press_enter()
         
-        time.sleep(0.2)
-        self.wait_for_validation()
         time.sleep(0.5)
+        self.wait_for_validation()
 
-        is_there_error = self.is_There_an_error_with_code()
-        if is_there_error:
-            error_message = self.get_error_message()
-            logger.info(f"{code} - couldn't be redeemed: {error_message}")
-
-            if error_message == "Code already redeemed":
-                file.write_code(conf.OWNED_CODES_FILE_PATH, code + '\n')
-        else:
-            redeemed_code_type = self.get_redeemed_code_type()
-            logger.info(f"{code} is a :{redeemed_code_type}.")
-            time.sleep(1)
+        self.check_code_status(code)
 
         self.con.press_enter()
 
@@ -66,4 +80,4 @@ class CodeRedeemer:
             logger.info(f"Finished redeeming {len(codes)} - press 'esc' to exit.")
 
         except Exception as e: 
-            logger.error(f"an error has occured {e}")
+            logger.error(f"An error has occured {e}")
