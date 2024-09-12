@@ -18,11 +18,10 @@ def main():
     listener = keyboard.Listener(on_press=controller.on_press)
     listener.start()
     
-    redeem_thread = Thread(target=redeemer.redeem_codes, args=(codes,))
-    redeem_thread.start()
-    
+    redeem_thread = Thread(target=redeemer.redeem_codes, args=(codes,), daemon=True).start()
 
     listener.join()
+   
 
 if __name__ == "__main__":
     main()
