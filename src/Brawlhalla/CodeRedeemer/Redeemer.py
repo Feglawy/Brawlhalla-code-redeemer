@@ -47,7 +47,7 @@ class CodeRedeemer:
             error_message = self.get_error_message()
             logger.info(f"{code} - couldn't be redeemed: {error_message}")
 
-            if error_message == "Code already redeemed":
+        if error_message == "item already owned":
                 file.write_code(conf.OWNED_CODES_FILE_PATH, code + '\n')
         elif is_code_redeemed:
             redeemed_code_type = self.get_redeemed_code_type()
