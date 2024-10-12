@@ -11,3 +11,6 @@
 ## How to run
 
 1. Run `run.bat` script
+
+> [!NOTE]
+> This system will interact with your PC by simulating user inputs, allowing it to automatically redeem the codes for you.
