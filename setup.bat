@@ -42,15 +42,12 @@ if not exist ".env" (
     )
 )
 
-echo You downloading must download Tessaract first here is a link -> https://github.com/UB-Mannheim/tesseract/
+echo You must download Tessaract first here is a link -> https://github.com/UB-Mannheim/tesseract/
 
 echo Setup complete!
 
 :: Wait for user to press Enter
 echo Press Enter to exit...
 pause >nul
-
-:: Deactivate the virtual environment
-deactivate
 
 ENDLOCAL

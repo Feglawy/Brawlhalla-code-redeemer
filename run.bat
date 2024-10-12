@@ -14,8 +14,4 @@ python src\main.py
 echo Press Enter to exit...
 pause >nul
 
-:: Deactivate the virtual environment after the application stops
-deactivate
-
 ENDLOCAL
-
